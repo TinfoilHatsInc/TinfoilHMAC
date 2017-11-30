@@ -1,6 +1,7 @@
 {
   "name": "tinfoilhatsinc/tinfoil-hmac",
   "description": "TinfoilHats Inc. API HMAC security package",
+  "license": "MIT",
   "type": "library",
   "authors": [
     {
