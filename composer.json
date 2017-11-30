@@ -17,5 +17,12 @@
     "psr-4": {
       "TinfoilHMAC\\": "src/"
     }
-  }
+  },
+  "repositories": [
+    {
+      "packagist": false,
+      "type": "vcs",
+      "url": "https://github.com/TinfoilHatsInc/TinfoilHMAC.git"
+    }
+  ]
 }
