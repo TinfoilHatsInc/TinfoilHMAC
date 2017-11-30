@@ -53,21 +53,40 @@ class SecureOutgoingRequest
       'method' => $this->apiMethod,
       'params' => $this->params,
     ];
-    $hmac = hash_hmac($hmacAlgo, base64_encode(serialize($body)), $nonce);
+    $hmac = hash_hmac($hmacAlgo, base64_encode(serialize($body)), $hmacKey);
     $request = $this->client->createRequest($this->httpMethod, null, [
       'content-type' => 'application/json',
-    ], [
-      'json' => json_encode([
+    ], json_encode([
         'nonce' => $nonce,
-        'sharedKey' => $sharedKey,
-        'hmacKey' => $hmacKey,
         'hmac' => $hmac,
         'method' => $this->apiMethod,
         'params' => $this->params,
-      ])
-    ]);
+      ]));
     return $this->client->send($request);
   }
 
+  /**
+   * @return mixed
+   */
+  public function getHttpMethod()
+  {
+    return $this->httpMethod;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getApiMethod()
+  {
+    return $this->apiMethod;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getParams()
+  {
+    return $this->params;
+  }
 
 }

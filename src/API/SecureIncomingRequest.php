@@ -31,7 +31,7 @@ class SecureIncomingRequest
     }
 
     $self = new static();
-    $self->httpMethod = $_SERVER['REQUEST_METHOD'];
+    $self->httpMethod = strtolower($_SERVER['REQUEST_METHOD']);
     $self->apiMethod = $request['method'];
     $self->params = $request['params'];
     return $self;
@@ -53,10 +53,10 @@ class SecureIncomingRequest
 
       $hmacKey = hash_hmac('sha256', $sharedKey, $nonce);
 
-      $localHmac = hash_hmac('sha256', serialize([
+      $localHmac = hash_hmac('sha256', base64_encode(serialize([
         'method' => $request['method'],
         'params' => $request['params'],
-      ]), $hmacKey);
+      ])), $hmacKey);
 
       return $localHmac == $hmac;
 
