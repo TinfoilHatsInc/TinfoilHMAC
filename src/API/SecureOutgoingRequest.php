@@ -2,8 +2,9 @@
 
 namespace TinfoilHMAC\API;
 
-use Guzzle\Http\Client;
-use Guzzle\Http\Message\Request;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use TinfoilHMAC\ConfigReader;
 
 class SecureOutgoingRequest
@@ -21,10 +22,6 @@ class SecureOutgoingRequest
    * @var mixed
    */
   private $params;
-  /**
-   * @var Client
-   */
-  private $client;
 
   /**
    * SecureRequest constructor.
@@ -32,16 +29,15 @@ class SecureOutgoingRequest
    * @param string $apiMethod
    * @param $params
    */
-  public function __construct($httpMethod = Request::GET, $apiMethod, $params)
+  public function __construct($httpMethod = 'GET', $apiMethod, $params)
   {
     $this->httpMethod = $httpMethod;
     $this->apiMethod = $apiMethod;
     $this->params = $params;
-    $this->client = new Client(ConfigReader::require ('apiURL'));
   }
 
   /**
-   * @return \Guzzle\Http\Message\Response
+   * @return Response
    */
   public function send()
   {
@@ -54,7 +50,7 @@ class SecureOutgoingRequest
       'params' => $this->params,
     ];
     $hmac = hash_hmac($hmacAlgo, base64_encode(serialize($body)), $hmacKey);
-    $request = $this->client->createRequest($this->httpMethod, null, [
+    $request = new Request($this->httpMethod, ConfigReader::require ('apiURL'), [
       'content-type' => 'application/json',
     ], json_encode([
         'nonce' => $nonce,
@@ -62,7 +58,8 @@ class SecureOutgoingRequest
         'method' => $this->apiMethod,
         'params' => $this->params,
       ]));
-    return $this->client->send($request);
+    $client = new Client();
+    return $client->send($request);
   }
 
   /**
