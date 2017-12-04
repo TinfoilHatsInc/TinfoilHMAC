@@ -51,9 +51,11 @@ class SecureIncomingRequest
       $nonce = $request['nonce'];
       $hmac = $request['hmac'];
 
-      $hmacKey = hash_hmac('sha256', $sharedKey, $nonce);
+      $hmacAlgo = ConfigReader::requireConfig ('hmacAlgorithm');
 
-      $localHmac = hash_hmac('sha256', base64_encode(serialize([
+      $hmacKey = hash_hmac($hmacAlgo, $sharedKey, $nonce);
+
+      $localHmac = hash_hmac($hmacAlgo, base64_encode(serialize([
         'params' => $request['params'],
       ])), $hmacKey);
 
