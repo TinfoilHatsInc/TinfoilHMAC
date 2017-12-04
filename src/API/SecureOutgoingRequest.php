@@ -1,6 +1,6 @@
 <?php
 
-namespace TinfoilHMAC\Security;
+namespace TinfoilHMAC\API;
 
 use Guzzle\Http\Client;
 use Guzzle\Http\Message\Request;
