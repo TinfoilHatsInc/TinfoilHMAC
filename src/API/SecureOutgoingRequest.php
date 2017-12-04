@@ -42,20 +42,18 @@ class SecureOutgoingRequest
   public function send()
   {
     $nonce = hash('sha1', rand());
-    $sharedKey = ConfigReader::require ('sharedKey');
-    $hmacAlgo = ConfigReader::require ('hmacAlgorithm');
+    $sharedKey = ConfigReader::requireConfig ('sharedKey');
+    $hmacAlgo = ConfigReader::requireConfig ('hmacAlgorithm');
     $hmacKey = hash_hmac($hmacAlgo, $sharedKey, $nonce);
     $body = [
-      'method' => $this->apiMethod,
       'params' => $this->params,
     ];
     $hmac = hash_hmac($hmacAlgo, base64_encode(serialize($body)), $hmacKey);
-    $request = new Request($this->httpMethod, ConfigReader::require ('apiURL'), [
+    $request = new Request($this->httpMethod, ConfigReader::requireConfig ('apiURL') . $this->apiMethod, [
       'content-type' => 'application/json',
     ], json_encode([
         'nonce' => $nonce,
         'hmac' => $hmac,
-        'method' => $this->apiMethod,
         'params' => $this->params,
       ]));
     $client = new Client();

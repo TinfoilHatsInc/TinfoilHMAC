@@ -33,7 +33,7 @@ class ConfigReader
    * @return string|array
    * @throws Exception
    */
-  public static function require ($key)
+  public static function requireConfig($key)
   {
 
     $keys = $key;

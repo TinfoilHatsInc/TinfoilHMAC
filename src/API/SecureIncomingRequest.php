@@ -32,16 +32,16 @@ class SecureIncomingRequest
 
     $self = new static();
     $self->httpMethod = strtolower($_SERVER['REQUEST_METHOD']);
-    $self->apiMethod = $request['method'];
+    $self->apiMethod = $_GET['method'];
     $self->params = $request['params'];
     return $self;
   }
 
   private static function validateRequest(array $request)
   {
-    $sharedKey = ConfigReader::require ('sharedKey');
+    $sharedKey = ConfigReader::requireConfig ('sharedKey');
 
-    if ( !empty($request['method'])
+    if ( !empty($_GET['method'])
       && !empty($request['params'])
       && !empty($request['nonce'])
       && !empty($request['hmac'])
@@ -54,7 +54,6 @@ class SecureIncomingRequest
       $hmacKey = hash_hmac('sha256', $sharedKey, $nonce);
 
       $localHmac = hash_hmac('sha256', base64_encode(serialize([
-        'method' => $request['method'],
         'params' => $request['params'],
       ])), $hmacKey);
 
