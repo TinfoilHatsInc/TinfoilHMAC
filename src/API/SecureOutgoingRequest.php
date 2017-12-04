@@ -62,28 +62,4 @@ class SecureOutgoingRequest
     return $client->send($request);
   }
 
-  /**
-   * @return mixed
-   */
-  public function getHttpMethod()
-  {
-    return $this->httpMethod;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getApiMethod()
-  {
-    return $this->apiMethod;
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getParams()
-  {
-    return $this->params;
-  }
-
 }
