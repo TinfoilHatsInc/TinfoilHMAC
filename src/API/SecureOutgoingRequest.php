@@ -3,6 +3,7 @@
 namespace TinfoilHMAC\API;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use TinfoilHMAC\ConfigReader;
@@ -57,7 +58,11 @@ class SecureOutgoingRequest
         'params' => $this->params,
       ]));
     $client = new Client();
-    return $client->send($request);
+    try {
+      return $client->send($request);
+    } catch (ClientException $e) {
+      return $e->getResponse();
+    }
   }
 
 }

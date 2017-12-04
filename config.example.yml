@@ -1,4 +1,4 @@
-apiURL: 'http://tinfoilhats.ninja:5000/hapi/'
+apiURL: 'https://tinfoilhats.ninja:5000/hapi/'
 sharedKey: ''
 
 hmacAlgorithm: 'sha256'
