@@ -1,4 +1,4 @@
 apiURL: ''
 sharedKey: ''
 
-hmacAlgorithm: ''
+hmacAlgorithm: 'sha256'
