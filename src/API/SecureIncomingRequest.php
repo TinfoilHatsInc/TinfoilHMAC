@@ -2,23 +2,29 @@
 
 namespace TinfoilHMAC\API;
 
-use TinfoilHMAC\ConfigReader;
 use TinfoilHMAC\Exception\InvalidRequestException;
-use TinfoilHMAC\Exception\MissingParameterException;
 
-class SecureIncomingRequest
+class SecureIncomingRequest extends SecureIncomingElem
 {
 
+  /**
+   * @var string
+   */
   private $httpMethod;
+  /**
+   * @var string
+   */
   private $apiMethod;
+  /**
+   * @var array
+   */
   private $params;
 
   /**
-   * @return static
+   * SecureIncomingRequest constructor.
    * @throws InvalidRequestException
-   * @throws MissingParameterException
    */
-  public static function create()
+  public function __construct()
   {
     $rawBody = file_get_contents('php://input');
     if (!empty($rawBody)) {
@@ -26,43 +32,13 @@ class SecureIncomingRequest
     } else {
       throw new InvalidRequestException('Request body is empty.');
     }
-    if(!self::validateRequest($request)) {
+    if(!empty($_GET['method']) && !self::validate($request)) {
       throw new InvalidRequestException('Invalid request.');
+    } else {
+      $this->httpMethod = strtolower($_SERVER['REQUEST_METHOD']);
+      $this->apiMethod = $_GET['method'];
+      $this->params = $request['params'];
     }
-
-    $self = new static();
-    $self->httpMethod = strtolower($_SERVER['REQUEST_METHOD']);
-    $self->apiMethod = $_GET['method'];
-    $self->params = $request['params'];
-    return $self;
-  }
-
-  private static function validateRequest(array $request)
-  {
-    $sharedKey = ConfigReader::requireConfig ('sharedKey');
-
-    if ( !empty($_GET['method'])
-      && !empty($request['params'])
-      && !empty($request['nonce'])
-      && !empty($request['hmac'])
-      && strlen($request['nonce']) == 40
-      && strlen($request['hmac']) == 64) {
-
-      $nonce = $request['nonce'];
-      $hmac = $request['hmac'];
-
-      $hmacAlgo = ConfigReader::requireConfig ('hmacAlgorithm');
-
-      $hmacKey = hash_hmac($hmacAlgo, $sharedKey, $nonce);
-
-      $localHmac = hash_hmac($hmacAlgo, base64_encode(serialize([
-        'params' => $request['params'],
-      ])), $hmacKey);
-
-      return $localHmac == $hmac;
-
-    }
-    return FALSE;
   }
 
   /**

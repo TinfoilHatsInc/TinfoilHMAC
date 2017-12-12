@@ -1,6 +1,6 @@
 <?php
 
-namespace TinfoilHMAC;
+namespace TinfoilHMAC\Util;
 
 use Exception;
 use Symfony\Component\Yaml\Yaml;
