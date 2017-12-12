@@ -26,7 +26,7 @@ abstract class SecureOutgoingElem
     return json_encode([
       'nonce' => $nonce,
       'hmac' => $hmac,
-      'body' => $body,
+      'body' => $this->body,
     ]);
   }
 

@@ -4,7 +4,7 @@ namespace TinfoilHMAC\API;
 
 use TinfoilHMAC\Exception\InvalidRequestException;
 
-class SecureIncomingRequest extends SecureIncomingElem
+class SecureAPIRequest extends SecureIncomingElem
 {
 
   /**
@@ -37,7 +37,7 @@ class SecureIncomingRequest extends SecureIncomingElem
     } else {
       $this->httpMethod = strtolower($_SERVER['REQUEST_METHOD']);
       $this->apiMethod = $_GET['method'];
-      $this->params = $request['params'];
+      $this->params = $request['body'];
     }
   }
 

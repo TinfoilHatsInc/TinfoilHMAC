@@ -15,7 +15,7 @@ abstract class SecureIncomingElem
   {
     $sharedKey = ConfigReader::requireConfig ('sharedKey');
 
-    if ( !empty($securedComm['body'])
+    if ( isset($securedComm['body'])
       && !empty($securedComm['nonce'])
       && !empty($securedComm['hmac'])
       && strlen($securedComm['nonce']) == 40

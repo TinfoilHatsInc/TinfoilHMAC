@@ -5,7 +5,7 @@ namespace TinfoilHMAC\API;
 use GuzzleHttp\Psr7\Response;
 use TinfoilHMAC\Exception\InvalidResponseException;
 
-class SecureIncomingResponse extends SecureIncomingElem
+class SecureResponse extends SecureIncomingElem
 {
 
   /**
@@ -15,7 +15,7 @@ class SecureIncomingResponse extends SecureIncomingElem
   /**
    * @var array
    */
-  private $responseBody;
+  private $message;
   /**
    * @var bool
    */
@@ -28,13 +28,13 @@ class SecureIncomingResponse extends SecureIncomingElem
    */
   public function __construct(Response $response)
   {
-    $responseBody = json_decode($response->getBody()->getContents());
+    $responseBody = json_decode($response->getBody()->getContents(), TRUE);
     if (!self::validate($responseBody)) {
       throw new InvalidResponseException('Invalid response.');
     } else {
       $rawBody = $responseBody['body'];
-      $this->responseBody = $rawBody;
-      if (empty($responseBody['error'])) {
+      $this->message = $rawBody['message'];
+      if (empty($rawBody['error'])) {
         $this->hasError = FALSE;
       }
       $this->responseCode = $response->getStatusCode();
@@ -52,9 +52,9 @@ class SecureIncomingResponse extends SecureIncomingElem
   /**
    * @return mixed
    */
-  public function getResponseBody()
+  public function getMessage()
   {
-    return $this->responseBody;
+    return $this->message;
   }
 
   /**

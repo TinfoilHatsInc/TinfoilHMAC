@@ -18,7 +18,7 @@ class ConfigReader
   {
 
     if (empty(self::$config)) {
-      $filePath = __DIR__ . '/../config.yml';
+      $filePath = __DIR__ . '/../../config.yml';
       if (!file_exists($filePath)) {
         throw new Exception('Config file could not be found.');
       }

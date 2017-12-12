@@ -5,10 +5,9 @@ namespace TinfoilHMAC\API;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Psr7\Response;
 use TinfoilHMAC\Util\ConfigReader;
 
-class SecureOutgoingRequest extends SecureOutgoingElem
+class SecureRequest extends SecureOutgoingElem
 {
 
   /**
@@ -34,20 +33,21 @@ class SecureOutgoingRequest extends SecureOutgoingElem
   }
 
   /**
-   * @return Response
+   * @return SecureResponse
    */
   public function send()
   {
     $body = $this->getSecureBody();
-    $request = new Request($this->httpMethod, ConfigReader::requireConfig ('apiURL') . $this->apiMethod, [
+    $request = new Request($this->httpMethod, ConfigReader::requireConfig('apiURL') . $this->apiMethod, [
       'content-type' => 'application/json',
     ], $body);
     $client = new Client();
     try {
-      return $client->send($request);
+      $response = $client->send($request);
     } catch (ClientException $e) {
-      return $e->getResponse();
+      $response = $e->getResponse();
     }
+    return new SecureResponse($response);
   }
 
 }
