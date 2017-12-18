@@ -18,7 +18,6 @@ class ClientSharedKey extends SharedKey
         throw new NoActiveSessionException('No active session.');
       }
       $sharedKey = $this->generateSharedKey();
-      ConfigReader::writeNewKey($sharedKey);
       $exception = new MissingSharedKeyException();
       $exception->setNewSharedKey($sharedKey);
       throw $exception;

@@ -64,17 +64,16 @@ class SecureRequest extends SecureOutgoingElem
     }
     $request = new Request($this->httpMethod, ConfigReader::requireConfig('apiURL') . $this->apiMethod, [
       'content-type' => 'application/json',
-    ], $body);
+    ], json_encode($body));
     $client = new Client();
     try {
       $response = $client->send($request);
+      ConfigReader::writeNewKey($sharedKey);
     } catch (ClientException $e) {
       $response = $e->getResponse();
     } catch (ServerException $e) {
       $response = $e->getResponse();
     }
-    print_r($response->getBody()->getContents());
-    exit;
     return new SecureResponse($response);
   }
 

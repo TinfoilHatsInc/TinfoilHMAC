@@ -14,6 +14,11 @@ abstract class SecureOutgoingElem
     $this->body = $body;
   }
 
+  /**
+   * @param $sharedKey
+   * @param bool $newKey
+   * @return array
+   */
   protected function getSecureBody($sharedKey, $newKey = FALSE) {
 
     $nonce = hash('sha1', rand());
@@ -26,11 +31,11 @@ abstract class SecureOutgoingElem
       'body' => $this->body,
     ];
     $hmac = hash_hmac($hmacAlgo, base64_encode(serialize($body)), $hmacKey);
-    return json_encode([
+    return [
       'nonce' => $nonce,
       'hmac' => $hmac,
       'body' => $this->body,
-    ]);
+    ];
   }
 
   public abstract function send();

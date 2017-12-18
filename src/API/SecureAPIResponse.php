@@ -27,7 +27,7 @@ class SecureAPIResponse extends SecureOutgoingElem
     } else {
       $sharedKey = 'empty_key';
     }
-    echo $this->getSecureBody($sharedKey);
+    echo json_encode($this->getSecureBody($sharedKey));
   }
 
 }
