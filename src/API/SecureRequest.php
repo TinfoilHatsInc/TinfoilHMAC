@@ -7,7 +7,10 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
 use TinfoilHMAC\Exception\MissingConfigException;
+use TinfoilHMAC\Exception\MissingSharedKeyException;
+use TinfoilHMAC\Util\ClientSharedKey;
 use TinfoilHMAC\Util\ConfigReader;
+use TinfoilHMAC\Util\Session;
 
 class SecureRequest extends SecureOutgoingElem
 {
@@ -29,6 +32,9 @@ class SecureRequest extends SecureOutgoingElem
    */
   public function __construct($httpMethod = 'GET', $apiMethod, $params)
   {
+    if(!Session::getInstance()->hasActiveSession()) {
+      Session::getInstance()->setSession(new ClientSharedKey());
+    }
     $this->httpMethod = $httpMethod;
     $this->apiMethod = $apiMethod;
     parent::__construct($params);
@@ -41,9 +47,9 @@ class SecureRequest extends SecureOutgoingElem
   {
     $new = FALSE;
     try {
-      $sharedKey = ConfigReader::requireConfig('sharedKey');
-    } catch (MissingConfigException $e) {
-      $sharedKey = $this->generateSharedKey();
+      $sharedKey = Session::getInstance()->getSharedKey();
+    } catch (MissingSharedKeyException $e) {
+      $sharedKey = $e->getNewSharedKey();
       $new = TRUE;
     }
     $body = $this->getSecureBody($sharedKey, $new);
@@ -61,11 +67,5 @@ class SecureRequest extends SecureOutgoingElem
     return new SecureResponse($response);
   }
 
-  /**
-   * @return string
-   */
-  private function generateSharedKey() {
-    return hash('sha256', random_bytes(32));
-  }
 
 }

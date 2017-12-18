@@ -2,7 +2,7 @@
 
 namespace TinfoilHMAC\Util;
 
-abstract class Session
+class Session
 {
 
   /**
@@ -10,26 +10,31 @@ abstract class Session
    */
   private static $instance;
   /**
-   * @var SharedKeyGetter
+   * @var SharedKey
    */
-  private $sharedKeyGetter;
+  private $sharedKey;
 
   /**
    * @return $this
    */
   public static function getInstance() {
     if (empty(self::$instance)) {
-      self::$instance = new static();
+      $class = get_called_class();
+      self::$instance = new $class();
     }
     return self::$instance;
   }
 
-  public function setSession(SharedKeyGetter $sharedKeyGetter) {
-    $this->sharedKeyGetter = $sharedKeyGetter;
+  public function setSession(SharedKey $sharedKey) {
+    $this->sharedKey = $sharedKey;
   }
 
-  public function getSharedKeyGetter() {
-    return $this->sharedKeyGetter;
+  public function hasActiveSession() {
+    return !empty($this->sharedKey);
+  }
+
+  public function getSharedKey() {
+    return $this->sharedKey->getSharedKey();
   }
 
 }

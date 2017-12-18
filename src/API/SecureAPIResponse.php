@@ -3,7 +3,6 @@
 namespace TinfoilHMAC\API;
 
 use TinfoilHMAC\Util\Session;
-use TinfoilHMAC\Util\SharedKeyGetter;
 
 class SecureAPIResponse extends SecureOutgoingElem
 {
@@ -22,7 +21,13 @@ class SecureAPIResponse extends SecureOutgoingElem
   public function send()
   {
     http_response_code($this->responseCode);
-    echo $this->getSecureBody(Session::getInstance()->getSharedKeyGetter()->getSharedKey());
+    $keyGetter = Session::getInstance()->getSharedKey();
+    if(!empty($keyGetter)) {
+      $sharedKey = Session::getInstance()->getSharedKey()->getSharedKey();
+    } else {
+      $sharedKey = 'empty_key';
+    }
+    echo $this->getSecureBody($sharedKey);
   }
 
 }

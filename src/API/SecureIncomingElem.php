@@ -14,7 +14,7 @@ abstract class SecureIncomingElem
    */
   protected static function validate(array $securedComm)
   {
-    $sharedKey = Session::getInstance()->getSharedKeyGetter()->getSharedKey();
+    $sharedKey = Session::getInstance()->getSharedKey();
 
     if ( isset($securedComm['body'])
       && !empty($securedComm['nonce'])
