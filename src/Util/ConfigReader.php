@@ -4,10 +4,8 @@ namespace TinfoilHMAC\Util;
 
 use Exception;
 use Symfony\Component\Yaml\Yaml;
-use TinfoilHMAC\Exception\MissingConfigException;
 
-class ConfigReader
-{
+class ConfigReader{
 
   private static $config;
 
@@ -55,7 +53,7 @@ class ConfigReader
     }
 
     if (!empty($missing)) {
-      throw new MissingConfigException('Config file does not have ' . implode(', ', $missing) . ' defined.');
+      throw new Exception('Config file does not have ' . implode(', ', $missing) . ' defined.');
     } else {
       if (!is_array($key)) {
         return $config[$key];
@@ -64,6 +62,22 @@ class ConfigReader
       }
     }
 
+  }
+
+  public static function writeNewKey($value){
+    $currentValsYaml = getConfig();
+    $currentValsYaml['sharedKey'] = $value;
+    $newYaml = Yaml::dump($yaml);
+    writeConfig($yaml);
+  }
+
+  public static function writeConfig($contents){
+    $filePath = __DIR__ . '/../../config.yml';
+      if (!file_exists($filePath)) {
+        throw new Exception('Config file could not be found.');
+      } else{
+      self::$config = Yaml::parse(file_put_contents($filePath, $contents));
+    }
   }
 
 }
