@@ -3,17 +3,19 @@
 namespace TinfoilHMAC\API;
 
 use TinfoilHMAC\Util\ConfigReader;
+use TinfoilHMAC\Util\SharedKeyGetter;
 
 abstract class SecureIncomingElem
 {
 
   /**
+   * @param SharedKeyGetter $sharedKeyGetter
    * @param array $securedComm
    * @return bool
    */
-  protected static function validate(array $securedComm)
+  protected static function validate(SharedKeyGetter $sharedKeyGetter, array $securedComm)
   {
-    $sharedKey = ConfigReader::requireConfig ('sharedKey');
+    $sharedKey = $sharedKeyGetter->getSharedKey();
 
     if ( isset($securedComm['body'])
       && !empty($securedComm['nonce'])
@@ -24,7 +26,7 @@ abstract class SecureIncomingElem
       $nonce = $securedComm['nonce'];
       $hmac = $securedComm['hmac'];
 
-      $hmacAlgo = ConfigReader::requireConfig ('hmacAlgorithm');
+      $hmacAlgo = ConfigReader::requireConfig('hmacAlgorithm');
 
       $hmacKey = hash_hmac($hmacAlgo, $sharedKey, $nonce);
 

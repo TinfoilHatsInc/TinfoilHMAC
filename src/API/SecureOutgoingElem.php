@@ -14,9 +14,12 @@ abstract class SecureOutgoingElem
     $this->body = $body;
   }
 
-  protected function getSecureBody() {
+  protected function getSecureBody($sharedKey, $newKey = FALSE) {
+
     $nonce = hash('sha1', rand());
-    $sharedKey = ConfigReader::requireConfig ('sharedKey');
+    if($newKey) {
+      $this->body['key'] = $sharedKey;
+    }
     $hmacAlgo = ConfigReader::requireConfig ('hmacAlgorithm');
     $hmacKey = hash_hmac($hmacAlgo, $sharedKey, $nonce);
     $body = [

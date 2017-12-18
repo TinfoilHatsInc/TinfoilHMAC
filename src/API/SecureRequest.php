@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
+use TinfoilHMAC\Exception\MissingConfigException;
 use TinfoilHMAC\Util\ConfigReader;
 
 class SecureRequest extends SecureOutgoingElem
@@ -38,7 +39,12 @@ class SecureRequest extends SecureOutgoingElem
    */
   public function send()
   {
-    $body = $this->getSecureBody();
+    try {
+      $sharedKey = ConfigReader::requireConfig('sharedKey');
+    } catch (MissingConfigException $e) {
+      $sharedKey = $this->generateSharedKey();
+    }
+    $body = $this->getSecureBody($sharedKey);
     $request = new Request($this->httpMethod, ConfigReader::requireConfig('apiURL') . $this->apiMethod, [
       'content-type' => 'application/json',
     ], $body);
@@ -51,6 +57,13 @@ class SecureRequest extends SecureOutgoingElem
       $response = $e->getResponse();
     }
     return new SecureResponse($response);
+  }
+
+  /**
+   * @return string
+   */
+  private function generateSharedKey() {
+    return hash('sha256', random_bytes(32));
   }
 
 }

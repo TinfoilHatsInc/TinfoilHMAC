@@ -4,6 +4,7 @@ namespace TinfoilHMAC\Util;
 
 use Exception;
 use Symfony\Component\Yaml\Yaml;
+use TinfoilHMAC\Exception\MissingConfigException;
 
 class ConfigReader
 {
@@ -54,7 +55,7 @@ class ConfigReader
     }
 
     if (!empty($missing)) {
-      throw new Exception('Config file does not have ' . implode(', ', $missing) . ' defined.');
+      throw new MissingConfigException('Config file does not have ' . implode(', ', $missing) . ' defined.');
     } else {
       if (!is_array($key)) {
         return $config[$key];
