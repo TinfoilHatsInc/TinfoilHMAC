@@ -4,10 +4,21 @@ namespace TinfoilHMAC\Util;
 
 use Exception;
 use Symfony\Component\Yaml\Yaml;
+use TinfoilHMAC\Exception\MissingConfigException;
 
 class ConfigReader{
 
+  const CONFIG_FILE_LOCATION = __DIR__ . '/../../config.yml';
+
   private static $config;
+
+  private static function getConfigFile() {
+    if (!file_exists(self::CONFIG_FILE_LOCATION)) {
+      throw new Exception('Config file could not be found.');
+    } else {
+      return self::CONFIG_FILE_LOCATION;
+    }
+  }
 
   /**
    * @return mixed
@@ -15,13 +26,8 @@ class ConfigReader{
    */
   private static function getConfig()
   {
-
     if (empty(self::$config)) {
-      $filePath = __DIR__ . '/../../config.yml';
-      if (!file_exists($filePath)) {
-        throw new Exception('Config file could not be found.');
-      }
-      self::$config = Yaml::parse(file_get_contents($filePath));
+      self::$config = Yaml::parse(file_get_contents(self::getConfigFile()));
     }
     return self::$config;
 
@@ -53,7 +59,7 @@ class ConfigReader{
     }
 
     if (!empty($missing)) {
-      throw new Exception('Config file does not have ' . implode(', ', $missing) . ' defined.');
+      throw new MissingConfigException('Config file does not have ' . implode(', ', $missing) . ' defined.');
     } else {
       if (!is_array($key)) {
         return $config[$key];
@@ -65,19 +71,15 @@ class ConfigReader{
   }
 
   public static function writeNewKey($value){
-    $currentValsYaml = getConfig();
+    $currentValsYaml = self::getConfig();
     $currentValsYaml['sharedKey'] = $value;
-    $newYaml = Yaml::dump($yaml);
-    writeConfig($yaml);
+    $newYaml = Yaml::dump($currentValsYaml);
+    self::writeConfig($newYaml);
   }
 
   public static function writeConfig($contents){
-    $filePath = __DIR__ . '/../../config.yml';
-      if (!file_exists($filePath)) {
-        throw new Exception('Config file could not be found.');
-      } else{
-      self::$config = Yaml::parse(file_put_contents($filePath, $contents));
-    }
+    file_put_contents(self::getConfigFile(), $contents);
+    self::$config = Yaml::parse($contents);
   }
 
 }

@@ -14,7 +14,7 @@ class ClientSharedKey extends SharedKey
       return ConfigReader::requireConfig('sharedKey');
     } catch (MissingConfigException $e) {
       $sharedKey = $this->generateSharedKey();
-      ConfigReader::writeConfig('sharedKey', $sharedKey);
+      ConfigReader::writeNewKey($sharedKey);
       $exception = new MissingSharedKeyException();
       $exception->setNewSharedKey($sharedKey);
       throw $exception;
