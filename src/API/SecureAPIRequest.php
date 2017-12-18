@@ -3,6 +3,7 @@
 namespace TinfoilHMAC\API;
 
 use TinfoilHMAC\Exception\InvalidRequestException;
+use TinfoilHMAC\Util\SharedKeyGetter;
 
 class SecureAPIRequest extends SecureIncomingElem
 {
@@ -22,9 +23,10 @@ class SecureAPIRequest extends SecureIncomingElem
 
   /**
    * SecureIncomingRequest constructor.
+   * @param SharedKeyGetter $sharedKeyGetter
    * @throws InvalidRequestException
    */
-  public function __construct()
+  public function __construct(SharedKeyGetter $sharedKeyGetter)
   {
     $rawBody = file_get_contents('php://input');
     if (!empty($rawBody)) {
@@ -32,7 +34,8 @@ class SecureAPIRequest extends SecureIncomingElem
     } else {
       throw new InvalidRequestException('Request body is empty.');
     }
-    if(!empty($_GET['method']) && !self::validate($request)) {
+    if(!empty($request['chubid']) && !empty($_GET['method'])
+      && !self::validate(new $sharedKeyGetter($request['chubid']), $request)) {
       throw new InvalidRequestException('Invalid request.');
     } else {
       $this->httpMethod = strtolower($_SERVER['REQUEST_METHOD']);
