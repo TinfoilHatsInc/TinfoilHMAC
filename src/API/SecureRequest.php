@@ -44,6 +44,7 @@ class SecureRequest extends SecureOutgoingElem
 
   /**
    * @return SecureResponse
+   * @throws NoActiveSessionException
    */
   public function send()
   {
@@ -56,9 +57,6 @@ class SecureRequest extends SecureOutgoingElem
     }
     $body = $this->getSecureBody($sharedKey, $new);
     if ($new) {
-      if (!UserSession::isSessionActive()) {
-        throw new NoActiveSessionException('No active session.');
-      }
       $email = UserSession::getUserEmail();
       $password = UserSession::getUserPassword();
       $body['body']['email'] = $email;
@@ -75,6 +73,8 @@ class SecureRequest extends SecureOutgoingElem
     } catch (ServerException $e) {
       $response = $e->getResponse();
     }
+    print_r($response->getBody()->getContents());
+    exit;
     return new SecureResponse($response);
   }
 

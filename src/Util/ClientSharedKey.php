@@ -4,6 +4,7 @@ namespace TinfoilHMAC\Util;
 
 use TinfoilHMAC\Exception\MissingConfigException;
 use TinfoilHMAC\Exception\MissingSharedKeyException;
+use TinfoilHMAC\Exception\NoActiveSessionException;
 
 class ClientSharedKey extends SharedKey
 {
@@ -13,6 +14,9 @@ class ClientSharedKey extends SharedKey
     try {
       return ConfigReader::requireConfig('sharedKey');
     } catch (MissingConfigException $e) {
+      if (!UserSession::isSessionActive()) {
+        throw new NoActiveSessionException('No active session.');
+      }
       $sharedKey = $this->generateSharedKey();
       ConfigReader::writeNewKey($sharedKey);
       $exception = new MissingSharedKeyException();
