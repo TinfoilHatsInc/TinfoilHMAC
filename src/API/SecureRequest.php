@@ -4,6 +4,7 @@ namespace TinfoilHMAC\API;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
 use TinfoilHMAC\Util\ConfigReader;
 
@@ -45,6 +46,8 @@ class SecureRequest extends SecureOutgoingElem
     try {
       $response = $client->send($request);
     } catch (ClientException $e) {
+      $response = $e->getResponse();
+    } catch (ServerException $e) {
       $response = $e->getResponse();
     }
     return new SecureResponse($response);
