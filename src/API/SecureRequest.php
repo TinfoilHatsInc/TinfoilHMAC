@@ -8,9 +8,11 @@ use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
 use TinfoilHMAC\Exception\MissingConfigException;
 use TinfoilHMAC\Exception\MissingSharedKeyException;
+use TinfoilHMAC\Exception\NoActiveSessionException;
 use TinfoilHMAC\Util\ClientSharedKey;
 use TinfoilHMAC\Util\ConfigReader;
 use TinfoilHMAC\Util\Session;
+use TinfoilHMAC\Util\UserSession;
 
 class SecureRequest extends SecureOutgoingElem
 {
@@ -32,7 +34,7 @@ class SecureRequest extends SecureOutgoingElem
    */
   public function __construct($httpMethod = 'GET', $apiMethod, $params)
   {
-    if(!Session::getInstance()->hasActiveSession()) {
+    if (!Session::getInstance()->hasActiveSession()) {
       Session::getInstance()->setSession(new ClientSharedKey());
     }
     $this->httpMethod = $httpMethod;
@@ -53,6 +55,15 @@ class SecureRequest extends SecureOutgoingElem
       $new = TRUE;
     }
     $body = $this->getSecureBody($sharedKey, $new);
+    if ($new) {
+      if (!UserSession::isSessionActive()) {
+        throw new NoActiveSessionException('No active session.');
+      }
+      $email = UserSession::getUserEmail();
+      $password = UserSession::getUserPassword();
+      $body['body']['email'] = $email;
+      $body['body']['password'] = $password;
+    }
     $request = new Request($this->httpMethod, ConfigReader::requireConfig('apiURL') . $this->apiMethod, [
       'content-type' => 'application/json',
     ], $body);
@@ -64,6 +75,8 @@ class SecureRequest extends SecureOutgoingElem
     } catch (ServerException $e) {
       $response = $e->getResponse();
     }
+    print_r($response->getBody()->getContents());
+    exit;
     return new SecureResponse($response);
   }
 
