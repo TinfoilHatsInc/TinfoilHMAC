@@ -3,19 +3,18 @@
 namespace TinfoilHMAC\API;
 
 use TinfoilHMAC\Util\ConfigReader;
-use TinfoilHMAC\Util\SharedKeyGetter;
+use TinfoilHMAC\Util\Session;
 
 abstract class SecureIncomingElem
 {
 
   /**
-   * @param SharedKeyGetter $sharedKeyGetter
    * @param array $securedComm
    * @return bool
    */
-  protected static function validate(SharedKeyGetter $sharedKeyGetter, array $securedComm)
+  protected static function validate(array $securedComm)
   {
-    $sharedKey = $sharedKeyGetter->getSharedKey();
+    $sharedKey = Session::getInstance()->getSharedKeyGetter()->getSharedKey();
 
     if ( isset($securedComm['body'])
       && !empty($securedComm['nonce'])

@@ -3,6 +3,7 @@
 namespace TinfoilHMAC\API;
 
 use TinfoilHMAC\Exception\InvalidRequestException;
+use TinfoilHMAC\Util\Session;
 use TinfoilHMAC\Util\SharedKeyGetter;
 
 class SecureAPIRequest extends SecureIncomingElem
@@ -34,8 +35,11 @@ class SecureAPIRequest extends SecureIncomingElem
     } else {
       throw new InvalidRequestException('Request body is empty.');
     }
+    if(!empty($request['chubid'])) {
+      Session::getInstance()->setSession(new $sharedKeyGetter($request['chubid']));
+    }
     if(!empty($request['chubid']) && !empty($_GET['method'])
-      && !self::validate(new $sharedKeyGetter($request['chubid']), $request)) {
+      && !self::validate($request)) {
       throw new InvalidRequestException('Invalid request.');
     } else {
       $this->httpMethod = strtolower($_SERVER['REQUEST_METHOD']);
