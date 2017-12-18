@@ -3,8 +3,8 @@
 namespace TinfoilHMAC\API;
 
 use TinfoilHMAC\Exception\InvalidRequestException;
+use TinfoilHMAC\Exception\InvalidSessionParamException;
 use TinfoilHMAC\Util\Session;
-use TinfoilHMAC\Util\SharedKeyGetter;
 
 class SecureAPIRequest extends SecureIncomingElem
 {
@@ -23,9 +23,10 @@ class SecureAPIRequest extends SecureIncomingElem
   private $params;
 
   /**
-   * SecureIncomingRequest constructor.
-   * @param string $sharedKeyGetterClass
+   * SecureAPIRequest constructor.
+   * @param $sharedKeyGetterClass
    * @throws InvalidRequestException
+   * @throws InvalidSessionParamException
    */
   public function __construct($sharedKeyGetterClass)
   {
@@ -33,12 +34,18 @@ class SecureAPIRequest extends SecureIncomingElem
     if (!empty($rawBody)) {
       $request = json_decode($rawBody, TRUE);
     } else {
-      throw new InvalidRequestException('Request body is empty.');
+      throw new InvalidSessionParamException('Request body is empty.');
     }
-    if(!empty($request['chubid'])) {
-      Session::getInstance()->setSession(new $sharedKeyGetterClass($request['chubid']));
+    if(empty($request['body'])) {
+      throw new InvalidSessionParamException('Request body is empty.');
     }
-    if(!empty($request['chubid']) && !empty($_GET['method'])
+    $body = $request['body'];
+    if(!empty($body['chubId'])) {
+      Session::getInstance()->setSession(new $sharedKeyGetterClass($body['chubId']));
+    } else {
+      throw new InvalidSessionParamException('Invalid request.');
+    }
+    if(!empty($body['chubId']) && !empty($_GET['method'])
       && !self::validate($request)) {
       throw new InvalidRequestException('Invalid request.');
     } else {

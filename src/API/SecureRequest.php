@@ -75,8 +75,6 @@ class SecureRequest extends SecureOutgoingElem
     } catch (ServerException $e) {
       $response = $e->getResponse();
     }
-    print_r($response->getBody()->getContents());
-    exit;
     return new SecureResponse($response);
   }
 
