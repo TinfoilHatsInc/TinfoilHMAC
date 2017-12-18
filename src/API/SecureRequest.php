@@ -39,12 +39,14 @@ class SecureRequest extends SecureOutgoingElem
    */
   public function send()
   {
+    $new = FALSE;
     try {
       $sharedKey = ConfigReader::requireConfig('sharedKey');
     } catch (MissingConfigException $e) {
       $sharedKey = $this->generateSharedKey();
+      $new = TRUE;
     }
-    $body = $this->getSecureBody($sharedKey);
+    $body = $this->getSecureBody($sharedKey, $new);
     $request = new Request($this->httpMethod, ConfigReader::requireConfig('apiURL') . $this->apiMethod, [
       'content-type' => 'application/json',
     ], $body);

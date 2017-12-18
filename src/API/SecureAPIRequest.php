@@ -24,10 +24,10 @@ class SecureAPIRequest extends SecureIncomingElem
 
   /**
    * SecureIncomingRequest constructor.
-   * @param SharedKeyGetter $sharedKeyGetter
+   * @param string $sharedKeyGetterClass
    * @throws InvalidRequestException
    */
-  public function __construct(SharedKeyGetter $sharedKeyGetter)
+  public function __construct($sharedKeyGetterClass)
   {
     $rawBody = file_get_contents('php://input');
     if (!empty($rawBody)) {
@@ -36,7 +36,7 @@ class SecureAPIRequest extends SecureIncomingElem
       throw new InvalidRequestException('Request body is empty.');
     }
     if(!empty($request['chubid'])) {
-      Session::getInstance()->setSession(new $sharedKeyGetter($request['chubid']));
+      Session::getInstance()->setSession(new $sharedKeyGetterClass($request['chubid']));
     }
     if(!empty($request['chubid']) && !empty($_GET['method'])
       && !self::validate($request)) {
