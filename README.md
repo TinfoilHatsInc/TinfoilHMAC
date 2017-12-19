@@ -52,36 +52,7 @@ First you have to install the following dependencies:
 * guzzle/guzzle (https://github.com/guzzle/guzzle)
 
 Next, you have to copy the contents of the TinfoilHMAC folder into one of the include_path directories specified in 
-your PHP configuration and load each class file manually:
-
-#### For APIs
-```php
-<?php
-use TinfoilHMAC\API\SecureAPIRequest;
-use TinfoilHMAC\API\SecureAPIResponse;
-
-require 'path/to/TinfoilHMAC/src/Exception/InvalidRequestException.php';
-require 'path/to/TinfoilHMAC/src/Util/ConfigReader.php';
-require 'path/to/TinfoilHMAC/src/API/SecureIncomingElem.php';
-require 'path/to/TinfoilHMAC/src/API/SecureOutgoingElem.php';
-require 'path/to/TinfoilHMAC/src/API/SecureAPIRequest.php';
-require 'path/to/TinfoilHMAC/src/API/SecureAPIResponse.php';
-```
-
-#### For clients
-```php
-<?php
-use TinfoilHMAC\API\SecureRequest;
-use TinfoilHMAC\API\SecureResponse;
-
-require 'path/to/TinfoilHMAC/src/Exception/InvalidResponseException.php';
-require 'path/to/TinfoilHMAC/src/Util/ConfigReader.php';
-require 'path/to/TinfoilHMAC/src/API/SecureIncomingElem.php';
-require 'path/to/TinfoilHMAC/src/API/SecureOutgoingElem.php';
-require 'path/to/TinfoilHMAC/src/API/SecureResponse.php';
-require 'path/to/TinfoilHMAC/src/API/SecureRequest.php';
-```
-
+your PHP configuration and load each class file manually.
 ## Setup
 
 Before the library can be used the `config.example.yml` file must be copied **in the same folder** and renamed to 
