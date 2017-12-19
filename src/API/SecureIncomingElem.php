@@ -41,7 +41,11 @@ abstract class SecureIncomingElem
       if ($localHmac == $hmac) {
         return TRUE;
       } else {
-        throw new InvalidHMACException('The HMAC was invalid.');
+        if (!empty($securedComm['body']['message']) && !empty($securedComm['body']['error'])) {
+          throw new InvalidHMACException('The HMAC was invalid. Message from API: ' . $securedComm['body']['message']);
+        } else {
+          throw new InvalidHMACException('The HMAC was invalid.');
+        }
       }
     }
     return FALSE;

@@ -29,7 +29,7 @@ class SecureResponse extends SecureIncomingElem
   public function __construct(Response $response)
   {
     $responseBody = json_decode($response->getBody()->getContents(), TRUE);
-    if (!self::validate($responseBody)) {
+    if (!is_array($responseBody) || !self::validate($responseBody)) {
       throw new InvalidResponseException('Invalid response.');
     } else {
       $rawBody = $responseBody['body'];

@@ -8,7 +8,6 @@ use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
 use TinfoilHMAC\Exception\MissingSharedKeyException;
 use TinfoilHMAC\Exception\NoActiveSessionException;
-use TinfoilHMAC\Util\ClientSharedKey;
 use TinfoilHMAC\Util\ConfigReader;
 use TinfoilHMAC\Util\Session;
 
