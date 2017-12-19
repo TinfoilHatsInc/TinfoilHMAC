@@ -18,9 +18,11 @@ class UserSession
       ini_set('session.sid_length', '128');
       ini_set('session.use_strict_mode', '1');
       session_start();
-      $_SESSION['email'] = $email;
-      $_SESSION['password'] = CredentialSecurity::hashUserPassword($email, $password);
     }
+    $_SESSION['hapi'] = [
+      'email' => $email,
+      'password' => CredentialSecurity::hashUserPassword($email, $password),
+    ];
   }
 
   public static function destroy()
