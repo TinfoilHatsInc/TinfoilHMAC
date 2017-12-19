@@ -34,7 +34,11 @@ class Session
   }
 
   public function getSharedKey() {
-    return $this->sharedKey->getSharedKey();
+    if($this->hasActiveSession()) {
+      return $this->sharedKey->getSharedKey();
+    } else {
+      return hash('sha1', rand());
+    }
   }
 
 }
