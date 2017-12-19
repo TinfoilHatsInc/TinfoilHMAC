@@ -2,6 +2,8 @@
 
 namespace TinfoilHMAC\Util;
 
+use TinfoilHMAC\Exception\NoActiveSessionException;
+
 class Session
 {
 
@@ -38,6 +40,31 @@ class Session
       return $this->sharedKey->getSharedKey();
     } else {
       return hash('sha1', rand());
+    }
+  }
+
+  public function initClientSharedKey() {
+    if(!$this->hasActiveSession()) {
+      $this->setSession(new ClientSharedKey());
+      return TRUE;
+    } else {
+      return FALSE;
+    }
+  }
+
+  public function hasKnownSharedKey() {
+    $this->initClientSharedKey();
+    try {
+      $this->getSharedKey();
+      return TRUE;
+    } catch (NoActiveSessionException $e) {
+      return FALSE;
+    }
+  }
+
+  public function invalidateKnownSharedKey() {
+    if($this->hasKnownSharedKey()) {
+      ConfigReader::writeNewKey('');
     }
   }
 

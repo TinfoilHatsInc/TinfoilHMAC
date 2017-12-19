@@ -2,6 +2,8 @@
 
 namespace TinfoilHMAC\API;
 
+use TinfoilHMAC\Exception\InvalidHMACException;
+use TinfoilHMAC\Exception\InvalidResponseException;
 use TinfoilHMAC\Util\ConfigReader;
 use TinfoilHMAC\Util\Session;
 
@@ -11,16 +13,19 @@ abstract class SecureIncomingElem
   /**
    * @param array $securedComm
    * @return bool
+   * @throws InvalidHMACException
+   * @throws InvalidResponseException
    */
   protected static function validate(array $securedComm)
   {
     $sharedKey = Session::getInstance()->getSharedKey();
 
-    if ( isset($securedComm['body'])
+    if (isset($securedComm['body'])
       && !empty($securedComm['nonce'])
       && !empty($securedComm['hmac'])
       && strlen($securedComm['nonce']) == 40
-      && strlen($securedComm['hmac']) == 64) {
+      && strlen($securedComm['hmac']) == 64
+    ) {
 
       $nonce = $securedComm['nonce'];
       $hmac = $securedComm['hmac'];
@@ -33,8 +38,11 @@ abstract class SecureIncomingElem
         'body' => $securedComm['body'],
       ])), $hmacKey);
 
-      return $localHmac == $hmac;
-
+      if ($localHmac == $hmac) {
+        return TRUE;
+      } else {
+        throw new InvalidHMACException('The HMAC was invalid.');
+      }
     }
     return FALSE;
   }

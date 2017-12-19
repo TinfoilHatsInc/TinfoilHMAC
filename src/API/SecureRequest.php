@@ -34,7 +34,7 @@ class SecureRequest extends SecureOutgoingElem
   public function __construct($httpMethod = 'GET', $chubId, $apiMethod, $params = [])
   {
     if (!Session::getInstance()->hasActiveSession()) {
-      Session::getInstance()->setSession(new ClientSharedKey());
+      Session::getInstance()->initClientSharedKey();
     }
     $this->httpMethod = $httpMethod;
     $this->apiMethod = $apiMethod;

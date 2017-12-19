@@ -2,6 +2,5 @@ vendor
 .idea
 .DS_Store
 composer.lock
-config.yml
 index.php
 autoload.php

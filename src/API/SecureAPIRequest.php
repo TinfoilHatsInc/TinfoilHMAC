@@ -36,17 +36,16 @@ class SecureAPIRequest extends SecureIncomingElem
     } else {
       throw new InvalidSessionParamException('Request body is empty.');
     }
-    if(empty($request['body'])) {
+    if (empty($request['body'])) {
       throw new InvalidSessionParamException('Request body is empty.');
     }
     $body = $request['body'];
-    if(!empty($body['chubId'])) {
+    if (!empty($body['chubId'])) {
       Session::getInstance()->setSession(new $sharedKeyGetterClass($body));
     } else {
       throw new InvalidSessionParamException('Invalid request.');
     }
-    if(!empty($body['chubId']) && !empty($_GET['method'])
-      && !self::validate($request)) {
+    if (!empty($body['chubId']) && !empty($_GET['method']) && !self::validate($request)) {
       throw new InvalidRequestException('Invalid request.');
     } else {
       $this->httpMethod = strtolower($_SERVER['REQUEST_METHOD']);
