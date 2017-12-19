@@ -39,15 +39,15 @@ class UserSession
   }
 
   public static function getUserEmail() {
-    return $_SESSION['email'];
+    return $_SESSION['hapi']['email'];
   }
 
   public static function getUserPassword() {
-    return $_SESSION['password'];
+    return $_SESSION['hapi']['password'];
   }
 
   public static function isSessionActive() {
-    return !empty($_SESSION['email']) || !empty($_SESSION['password']);
+    return !empty($_SESSION['hapi']['email']) || !empty($_SESSION['hapi']['password']);
   }
 
 }
