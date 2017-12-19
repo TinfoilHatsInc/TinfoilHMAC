@@ -12,7 +12,8 @@ The following classes in this library can be used:
 * **SecureResponse**
 
 The first two classes are **not** be used in clients as they are only applicable in APIs (Tinfoil HAPI) for processing 
-incoming requests from clients using this library and sending responses.necessaryreRequest class can be used to send secure requests to the registered API and will, if a *valid response is 
+incoming requests from clients using this library and sending responses.
+The SecureRequest class can be used to send secure requests to the registered API and will, if a *valid response is 
 returned, create a SecureResponse object containing the HTTP response code, a response message and a boolean 
 representing the success of the request.
 
