@@ -21,8 +21,7 @@ class SecureAPIResponse extends SecureOutgoingElem
   public function send()
   {
     http_response_code($this->responseCode);
-    $keyGetter = Session::getInstance()->getSharedKey();
-    if(!empty($keyGetter)) {
+    if(Session::getInstance()->hasActiveSession()) {
       $sharedKey = Session::getInstance()->getSharedKey();
     } else {
       $sharedKey = 'empty_key';

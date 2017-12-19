@@ -77,7 +77,7 @@ class ConfigReader{
     self::writeConfig($newYaml);
   }
 
-  public static function writeConfig($contents){
+  private static function writeConfig($contents){
     file_put_contents(self::getConfigFile(), $contents);
     self::$config = Yaml::parse($contents);
   }

@@ -41,7 +41,7 @@ class SecureAPIRequest extends SecureIncomingElem
     }
     $body = $request['body'];
     if(!empty($body['chubId'])) {
-      Session::getInstance()->setSession(new $sharedKeyGetterClass($body['chubId']));
+      Session::getInstance()->setSession(new $sharedKeyGetterClass($body));
     } else {
       throw new InvalidSessionParamException('Invalid request.');
     }

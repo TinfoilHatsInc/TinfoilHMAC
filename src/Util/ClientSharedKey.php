@@ -9,19 +9,25 @@ use TinfoilHMAC\Exception\NoActiveSessionException;
 class ClientSharedKey extends SharedKey
 {
 
+  private $sharedKey;
+
   public function getSharedKey()
   {
-    try {
-      return ConfigReader::requireConfig('sharedKey');
-    } catch (MissingConfigException $e) {
-      if (!UserSession::isSessionActive()) {
-        throw new NoActiveSessionException('No active session.');
+    if(empty($this->sharedKey)) {
+      try {
+        $this->sharedKey = ConfigReader::requireConfig('sharedKey');
+      } catch (MissingConfigException $e) {
+        if (!UserSession::isSessionActive()) {
+          throw new NoActiveSessionException('No active session.');
+        }
+        $sharedKey = $this->generateSharedKey();
+        $this->sharedKey = $sharedKey;
+        $exception = new MissingSharedKeyException();
+        $exception->setNewSharedKey($sharedKey);
+        throw $exception;
       }
-      $sharedKey = $this->generateSharedKey();
-      $exception = new MissingSharedKeyException();
-      $exception->setNewSharedKey($sharedKey);
-      throw $exception;
     }
+    return $this->sharedKey;
   }
 
   /**
