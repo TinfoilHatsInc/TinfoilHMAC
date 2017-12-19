@@ -53,6 +53,11 @@ First you have to install the following dependencies:
 Next, you have to copy the contents of the TinfoilHMAC folder into one of the include_path directories specified in 
 your PHP configuration and load each class file manually.
 
+## Setup
+
+Before the library can be used the `config.example.yml` file must be copied **in the same folder** and renamed to 
+`config.yml`. The missing value(s) have to be defined and other values can be changed according to your configuration.
+
 ## Usage
 
 An example of the usage of this library (within clients): 

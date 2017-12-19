@@ -4,3 +4,4 @@ vendor
 composer.lock
 index.php
 autoload.php
+config.yml
