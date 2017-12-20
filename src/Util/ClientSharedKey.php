@@ -6,11 +6,23 @@ use TinfoilHMAC\Exception\MissingConfigException;
 use TinfoilHMAC\Exception\MissingSharedKeyException;
 use TinfoilHMAC\Exception\NoActiveSessionException;
 
+/**
+ * Class ClientSharedKey
+ * @package TinfoilHMAC\Util
+ */
 class ClientSharedKey extends SharedKey
 {
 
+  /**
+   * @var string
+   */
   private $sharedKey;
 
+  /**
+   * @return array|string
+   * @throws MissingSharedKeyException
+   * @throws NoActiveSessionException
+   */
   public function getSharedKey()
   {
     if(empty($this->sharedKey)) {

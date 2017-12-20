@@ -68,8 +68,10 @@ An example of the usage of this library (within clients):
 // Check if there is a known shared key registered.
 if(!TinfoilHMAC\Util\Session::getInstance()->hasKnownSharedKey()) {
   // If no key is registered force the user to login.
-  // Then open a new HAPI user session with the user's credentials.
-  TinfoilHMAC\Util\UserSession::open('test@test.com', 'test123');
+  // Then, if there is no active session open a new HAPI user session with the user's credentials.
+  if(TinfoilHMAC\Util\UserSession::isSessionActive()) {
+    TinfoilHMAC\Util\UserSession::open('test@test.com', 'test123');
+  }
 }
 // Send a request (shared key generation will be done automatically but needs an active UserSession).
 // The request consists of an HTTP method, the CHUB id, the API method and parameters if necessary.
@@ -78,8 +80,8 @@ $request = new TinfoilHMAC\API\SecureRequest('GET', 'the-chub-id', 'the-api-meth
   'param2' => 'value2',
 ]);
 try {
-  // The request will automatically be verified with the registered shared key and a TinfoilHMAC\API\SecureResponse
-  // object is created.
+  // The request will automatically be verified with the registered shared key and a
+  // TinfoilHMAC\API\SecureResponse object is created.
   $response = $request->send();
   // Check if request was successful
   if(!$response->hasError()) {

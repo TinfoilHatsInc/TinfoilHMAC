@@ -5,6 +5,10 @@ namespace TinfoilHMAC\API;
 use GuzzleHttp\Psr7\Response;
 use TinfoilHMAC\Exception\InvalidResponseException;
 
+/**
+ * Class SecureResponse
+ * @package TinfoilHMAC\API
+ */
 class SecureResponse extends SecureIncomingElem
 {
 

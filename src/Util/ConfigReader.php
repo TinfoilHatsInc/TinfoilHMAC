@@ -6,12 +6,23 @@ use Exception;
 use Symfony\Component\Yaml\Yaml;
 use TinfoilHMAC\Exception\MissingConfigException;
 
+/**
+ * Class ConfigReader
+ * @package TinfoilHMAC\Util
+ */
 class ConfigReader{
 
   const CONFIG_FILE_LOCATION = __DIR__ . '/../../config.yml';
 
+  /**
+   * @var array
+   */
   private static $config;
 
+  /**
+   * @return string
+   * @throws Exception
+   */
   private static function getConfigFile() {
     if (!file_exists(self::CONFIG_FILE_LOCATION)) {
       throw new Exception('Config file could not be found.');
@@ -21,7 +32,7 @@ class ConfigReader{
   }
 
   /**
-   * @return mixed
+   * @return array
    * @throws Exception
    */
   private static function getConfig()
@@ -70,6 +81,10 @@ class ConfigReader{
 
   }
 
+  /**
+   * @param $value
+   * @return void
+   */
   public static function writeNewKey($value){
     $currentValsYaml = self::getConfig();
     $currentValsYaml['sharedKey'] = $value;
@@ -77,6 +92,10 @@ class ConfigReader{
     self::writeConfig($newYaml);
   }
 
+  /**
+   * @param $contents
+   * @return void
+   */
   private static function writeConfig($contents){
     file_put_contents(self::getConfigFile(), $contents);
     self::$config = Yaml::parse($contents);

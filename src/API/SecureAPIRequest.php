@@ -6,6 +6,10 @@ use TinfoilHMAC\Exception\InvalidRequestException;
 use TinfoilHMAC\Exception\InvalidSessionParamException;
 use TinfoilHMAC\Util\Session;
 
+/**
+ * Class SecureAPIRequest used to handle request send to an API
+ * @package TinfoilHMAC\API
+ */
 class SecureAPIRequest extends SecureIncomingElem
 {
 
@@ -40,11 +44,13 @@ class SecureAPIRequest extends SecureIncomingElem
       throw new InvalidSessionParamException('Request body is empty.');
     }
     $body = $request['body'];
+    // If chubId is send with the request, create new shared key handler class.
     if (!empty($body['chubId'])) {
       Session::getInstance()->setSession(new $sharedKeyGetterClass($body));
     } else {
       throw new InvalidSessionParamException('Invalid request.');
     }
+    // Check if request is valid.
     if (!empty($body['chubId']) && !empty($_GET['method']) && !self::validate($request)) {
       throw new InvalidRequestException('Invalid request.');
     } else {

@@ -5,11 +5,22 @@ namespace TinfoilHMAC\API;
 use TinfoilHMAC\Util\ConfigReader;
 use TinfoilHMAC\Util\UserSession;
 
+/**
+ * Class SecureOutgoingElem
+ * @package TinfoilHMAC\API
+ */
 abstract class SecureOutgoingElem
 {
 
+  /**
+   * @var array
+   */
   private $body;
 
+  /**
+   * SecureOutgoingElem constructor.
+   * @param array $body
+   */
   public function __construct($body)
   {
     $this->body = $body;
@@ -43,6 +54,9 @@ abstract class SecureOutgoingElem
     ];
   }
 
+  /**
+   * @return void
+   */
   public abstract function send();
 
 }

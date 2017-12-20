@@ -11,6 +11,10 @@ use TinfoilHMAC\Exception\NoActiveSessionException;
 use TinfoilHMAC\Util\ConfigReader;
 use TinfoilHMAC\Util\Session;
 
+/**
+ * Class SecureRequest
+ * @package TinfoilHMAC\API
+ */
 class SecureRequest extends SecureOutgoingElem
 {
 

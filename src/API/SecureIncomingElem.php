@@ -7,6 +7,10 @@ use TinfoilHMAC\Exception\InvalidResponseException;
 use TinfoilHMAC\Util\ConfigReader;
 use TinfoilHMAC\Util\Session;
 
+/**
+ * Class SecureIncomingElem
+ * @package TinfoilHMAC\API
+ */
 abstract class SecureIncomingElem
 {
 

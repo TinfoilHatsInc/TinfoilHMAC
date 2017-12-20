@@ -2,10 +2,23 @@
 
 namespace TinfoilHMAC\Util;
 
+use TinfoilHMAC\Exception\ActiveSessionException;
+
+/**
+ * Class UserSession
+ * @package TinfoilHMAC\Util
+ */
 class UserSession
 {
 
-  public static function open($email, $password)
+  /**
+   * @param string $email
+   * @param string $password
+   * @param bool $replace
+   * @throws ActiveSessionException
+   * @return void
+   */
+  public static function open($email, $password, $replace = FALSE)
   {
     if (session_status() == PHP_SESSION_NONE) {
       session_name('sid');
@@ -14,10 +27,12 @@ class UserSession
         $secureCookie = TRUE;
       }
       session_set_cookie_params(0, '/', NULL, $secureCookie, TRUE);
-      ini_set('session.hash_function', 'sha512');
-      ini_set('session.sid_length', '128');
-      ini_set('session.use_strict_mode', '1');
-      session_start();
+      session_start([
+        'sid_length' => 128,
+        'use_strict_mode' => TRUE,
+      ]);
+    } elseif (array_key_exists('hapi', $_SESSION) && !$replace) {
+      throw new ActiveSessionException('A session is already active.');
     }
     $_SESSION['hapi'] = [
       'email' => $email,
@@ -25,12 +40,18 @@ class UserSession
     ];
   }
 
+  /**
+   * @return void
+   */
   public static function destroy()
   {
-    session_destroy();
+    unset($_SESSION['hapi']);
     session_regenerate_id();
   }
 
+  /**
+   * @return bool
+   */
   public static function sessionIsSecure()
   {
     return
@@ -38,14 +59,23 @@ class UserSession
       || $_SERVER['SERVER_PORT'] == 443;
   }
 
+  /**
+   * @return string
+   */
   public static function getUserEmail() {
     return $_SESSION['hapi']['email'];
   }
 
+  /**
+   * @return string
+   */
   public static function getUserPassword() {
     return $_SESSION['hapi']['password'];
   }
 
+  /**
+   * @return bool
+   */
   public static function isSessionActive() {
     return !empty($_SESSION['hapi']['email']) || !empty($_SESSION['hapi']['password']);
   }

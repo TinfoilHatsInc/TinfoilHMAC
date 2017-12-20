@@ -5,9 +5,10 @@ namespace TinfoilHMAC\Exception;
 use Exception;
 
 /**
- * Class InvalidResponseException
+ * Class ActiveSessionException
  * @package TinfoilHMAC\Exception
  */
-class InvalidResponseException extends Exception
+class ActiveSessionException extends Exception
 {
+
 }
