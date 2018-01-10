@@ -74,7 +74,7 @@ class SecureRequest extends SecureOutgoingElem
     } catch (ServerException $e) {
       $response = $e->getResponse();
     }
-    $response = new SecureResponse($response);
+    $response = new SecureResponse($response, $sharedKey);
     if(!$response->hasError()) {
       ConfigReader::writeNewKey($sharedKey);
     }

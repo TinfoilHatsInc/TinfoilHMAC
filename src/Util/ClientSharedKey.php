@@ -27,6 +27,9 @@ class ClientSharedKey extends SharedKey
   {
     if(empty($this->sharedKey)) {
       try {
+        if(!Session::getInstance()->sharedKeyIsValid()) {
+          throw new MissingConfigException('Shared key invalid.');
+        }
         $this->sharedKey = ConfigReader::requireConfig('sharedKey');
       } catch (MissingConfigException $e) {
         if (!UserSession::isSessionActive()) {

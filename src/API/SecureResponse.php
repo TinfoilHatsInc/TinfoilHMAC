@@ -28,12 +28,13 @@ class SecureResponse extends SecureIncomingElem
   /**
    * SecureIncomingResponse constructor.
    * @param Response $response
+   * @param string $sharedKey
    * @throws InvalidResponseException
    */
-  public function __construct(Response $response)
+  public function __construct(Response $response, $sharedKey = NULL)
   {
     $responseBody = json_decode($response->getBody()->getContents(), TRUE);
-    if (!is_array($responseBody) || !self::validate($responseBody)) {
+    if (!is_array($responseBody) || !self::validate($responseBody, $sharedKey)) {
       throw new InvalidResponseException('Invalid response.');
     } else {
       $rawBody = $responseBody['body'];

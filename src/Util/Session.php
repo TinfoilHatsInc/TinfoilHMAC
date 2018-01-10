@@ -24,7 +24,8 @@ class Session
   /**
    * @return $this
    */
-  public static function getInstance() {
+  public static function getInstance()
+  {
     if (empty(self::$instance)) {
       $class = get_called_class();
       self::$instance = new $class();
@@ -36,27 +37,25 @@ class Session
    * @param SharedKey $sharedKey
    * @return void
    */
-  public function setSession(SharedKey $sharedKey) {
+  public function setSession(SharedKey $sharedKey)
+  {
     $this->sharedKey = $sharedKey;
   }
 
   /**
    * @return bool
    */
-  public function hasActiveSession() {
+  public function hasActiveSession()
+  {
     return !empty($this->sharedKey);
   }
 
   /**
-   * @param bool $errorOnInvalid
-   * @throws MissingSharedKeyException
    * @return string
    */
-  public function getSharedKey($errorOnInvalid = TRUE) {
-    if($errorOnInvalid && !$this->sharedKeyIsValid()) {
-      throw new MissingSharedKeyException('Shared key is invalid.');
-    }
-    if($this->hasActiveSession()) {
+  public function getSharedKey()
+  {
+    if ($this->hasActiveSession()) {
       return $this->sharedKey->getSharedKey();
     } else {
       return hash('sha1', rand());
@@ -66,8 +65,9 @@ class Session
   /**
    * @return bool
    */
-  public function initClientSharedKey() {
-    if(!$this->hasActiveSession()) {
+  public function initClientSharedKey()
+  {
+    if (!$this->hasActiveSession()) {
       $this->setSession(new ClientSharedKey());
       return TRUE;
     } else {
@@ -78,7 +78,8 @@ class Session
   /**
    * @return bool
    */
-  public function hasKnownSharedKey() {
+  public function hasKnownSharedKey()
+  {
     $this->initClientSharedKey();
     try {
       $this->getSharedKey();
@@ -88,17 +89,17 @@ class Session
     }
   }
 
-  public function sharedKeyIsValid() {
-    return !ConfigReader::requireConfig('sharedKeyInvalid');
+  public function sharedKeyIsValid()
+  {
+    return !ConfigReader::requireConfig('sharedKeyInvalid', FALSE);
   }
 
   /**
    * @return void
    */
-  public function invalidateKnownSharedKey() {
-    if($this->hasKnownSharedKey()) {
-      ConfigReader::invalidateSharedKey();
-    }
+  public function invalidateKnownSharedKey()
+  {
+    ConfigReader::invalidateSharedKey();
   }
 
 }

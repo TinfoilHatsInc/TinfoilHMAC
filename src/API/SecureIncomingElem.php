@@ -16,13 +16,16 @@ abstract class SecureIncomingElem
 
   /**
    * @param array $securedComm
+   * @param string $sharedKey
    * @return bool
    * @throws InvalidHMACException
    * @throws InvalidResponseException
    */
-  protected static function validate(array $securedComm)
+  protected static function validate(array $securedComm, $sharedKey = NULL)
   {
-    $sharedKey = Session::getInstance()->getSharedKey();
+    if(empty($sharedKey)) {
+      $sharedKey = Session::getInstance()->getSharedKey();
+    }
 
     if (isset($securedComm['body'])
       && !empty($securedComm['nonce'])
