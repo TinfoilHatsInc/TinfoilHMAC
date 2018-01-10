@@ -46,10 +46,11 @@ class ConfigReader{
 
   /**
    * @param $key
+   * @param bool $errorOnEmpty
    * @return string|array
    * @throws Exception
    */
-  public static function requireConfig($key)
+  public static function requireConfig($key, $errorOnEmpty = TRUE)
   {
 
     $keys = $key;
@@ -62,7 +63,7 @@ class ConfigReader{
     $keyValues = [];
     $missing = [];
     foreach ($keys as $key) {
-      if (!array_key_exists($key, $config) || $config[$key] == '') {
+      if (!array_key_exists($key, $config) || ($errorOnEmpty && $config[$key] == '')) {
         $missing[] = '\'' . $key . '\'';
       } else {
         $keyValues[$key] = $config[$key];

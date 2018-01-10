@@ -2,6 +2,7 @@
 
 namespace TinfoilHMAC\Util;
 
+use TinfoilHMAC\Exception\MissingSharedKeyException;
 use TinfoilHMAC\Exception\NoActiveSessionException;
 
 /**
@@ -47,9 +48,14 @@ class Session
   }
 
   /**
+   * @param bool $errorOnInvalid
+   * @throws MissingSharedKeyException
    * @return string
    */
-  public function getSharedKey() {
+  public function getSharedKey($errorOnInvalid = TRUE) {
+    if($errorOnInvalid && !$this->sharedKeyIsValid()) {
+      throw new MissingSharedKeyException('Shared key is invalid.');
+    }
     if($this->hasActiveSession()) {
       return $this->sharedKey->getSharedKey();
     } else {
