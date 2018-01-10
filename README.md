@@ -69,7 +69,7 @@ An example of the usage of this library (within clients):
 if(!TinfoilHMAC\Util\Session::getInstance()->hasKnownSharedKey()) {
   // If no key is registered force the user to login.
   // Then, if there is no active session open a new HAPI user session with the user's credentials.
-  if(TinfoilHMAC\Util\UserSession::isSessionActive()) {
+  if(!TinfoilHMAC\Util\UserSession::isSessionActive()) {
     TinfoilHMAC\Util\UserSession::open('test@test.com', 'test123');
   }
 }

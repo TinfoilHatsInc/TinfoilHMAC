@@ -82,12 +82,16 @@ class Session
     }
   }
 
+  public function sharedKeyIsValid() {
+    return !ConfigReader::requireConfig('sharedKeyInvalid');
+  }
+
   /**
    * @return void
    */
   public function invalidateKnownSharedKey() {
     if($this->hasKnownSharedKey()) {
-      ConfigReader::writeNewKey('');
+      ConfigReader::invalidateSharedKey();
     }
   }
 

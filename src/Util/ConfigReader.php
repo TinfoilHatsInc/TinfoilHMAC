@@ -88,6 +88,7 @@ class ConfigReader{
   public static function writeNewKey($value){
     $currentValsYaml = self::getConfig();
     $currentValsYaml['sharedKey'] = $value;
+    $currentValsYaml['sharedKeyInvalid'] = FALSE;
     $newYaml = Yaml::dump($currentValsYaml);
     self::writeConfig($newYaml);
   }
@@ -99,6 +100,13 @@ class ConfigReader{
   private static function writeConfig($contents){
     file_put_contents(self::getConfigFile(), $contents);
     self::$config = Yaml::parse($contents);
+  }
+
+  public static function invalidateSharedKey() {
+    $config = self::getConfig();
+    $config['sharedKeyInvalid'] = TRUE;
+    $newConfig = Yaml::dump($config);
+    self::writeConfig($newConfig);
   }
 
 }
