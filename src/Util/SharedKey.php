@@ -14,4 +14,6 @@ abstract class SharedKey
    */
   public abstract function getSharedKey();
 
+  public abstract function getSetKey();
+
 }

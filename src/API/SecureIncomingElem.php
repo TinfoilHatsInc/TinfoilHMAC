@@ -27,6 +27,8 @@ abstract class SecureIncomingElem
       $sharedKey = Session::getInstance()->getSharedKey();
     }
 
+    $setKey = Session::getInstance()->getSetKey();
+
     if (isset($securedComm['body'])
       && !empty($securedComm['nonce'])
       && !empty($securedComm['hmac'])
@@ -39,7 +41,7 @@ abstract class SecureIncomingElem
 
       $hmacAlgo = ConfigReader::requireConfig('hmacAlgorithm');
 
-      $hmacKey = hash_hmac($hmacAlgo, $sharedKey, $nonce);
+      $hmacKey = hash_hmac($hmacAlgo, $sharedKey . $setKey, $nonce);
 
       $localHmac = hash_hmac($hmacAlgo, base64_encode(serialize([
         'body' => $securedComm['body'],

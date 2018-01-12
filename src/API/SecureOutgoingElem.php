@@ -3,6 +3,7 @@
 namespace TinfoilHMAC\API;
 
 use TinfoilHMAC\Util\ConfigReader;
+use TinfoilHMAC\Util\Session;
 use TinfoilHMAC\Util\UserSession;
 
 /**
@@ -41,8 +42,9 @@ abstract class SecureOutgoingElem
       $this->body['email'] = $email;
       $this->body['password'] = $password;
     }
-    $hmacAlgo = ConfigReader::requireConfig ('hmacAlgorithm');
-    $hmacKey = hash_hmac($hmacAlgo, $sharedKey, $nonce);
+    $hmacAlgo = ConfigReader::requireConfig('hmacAlgorithm');
+    $setKey = Session::getInstance()->getSetKey();
+    $hmacKey = hash_hmac($hmacAlgo, $sharedKey . $setKey, $nonce);
     $body = [
       'body' => $this->body,
     ];

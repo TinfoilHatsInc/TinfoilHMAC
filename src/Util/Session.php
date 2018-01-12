@@ -102,4 +102,8 @@ class Session
     ConfigReader::invalidateSharedKey();
   }
 
+  public function getSetKey() {
+    return $this->sharedKey->getSetKey();
+  }
+
 }

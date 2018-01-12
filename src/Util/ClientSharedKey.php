@@ -52,4 +52,9 @@ class ClientSharedKey extends SharedKey
     return hash('sha256', random_bytes(32));
   }
 
+  public function getSetKey()
+  {
+    return ConfigReader::requireConfig('setKey');
+  }
+
 }
