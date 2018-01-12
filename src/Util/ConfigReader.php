@@ -12,7 +12,7 @@ use TinfoilHMAC\Exception\MissingConfigException;
  */
 class ConfigReader{
 
-  const CONFIG_FILE_LOCATION = __DIR__ . '/../../config.yml';
+  const CONFIG_FILE_LOCATION = '/../../config.yml';
 
   /**
    * @var array
@@ -24,10 +24,11 @@ class ConfigReader{
    * @throws Exception
    */
   private static function getConfigFile() {
-    if (!file_exists(self::CONFIG_FILE_LOCATION)) {
+    $configFile = __DIR__ . self::CONFIG_FILE_LOCATION;
+    if (!file_exists($configFile)) {
       throw new Exception('Config file could not be found.');
     } else {
-      return self::CONFIG_FILE_LOCATION;
+      return $configFile;
     }
   }
 
