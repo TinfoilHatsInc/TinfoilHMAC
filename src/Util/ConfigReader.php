@@ -111,4 +111,11 @@ class ConfigReader{
     self::writeConfig($newConfig);
   }
 
+  public static function writeSessionInitTime() {
+    $config = self::$config;
+    $config['sessInitTime'] = (new \DateTime())->format('Y-m-d H:i:s');
+    $newConfig = Yaml::dump($config);
+    self::writeConfig($newConfig);
+  }
+
 }

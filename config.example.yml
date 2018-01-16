@@ -3,3 +3,4 @@ sharedKey:
 sharedKeyInvalid: false
 hmacAlgorithm: sha256
 setKey:
+sessInitTime:

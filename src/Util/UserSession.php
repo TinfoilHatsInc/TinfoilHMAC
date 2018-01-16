@@ -80,4 +80,16 @@ class UserSession
     return !empty($_SESSION['hapi']['email']) && !empty($_SESSION['hapi']['password']);
   }
 
+  public static function isSessionValid() {
+    $configReader = new ConfigReader();
+    $sessInitTime = $configReader->requireConfig('sessInitTime', FALSE);
+    if(empty($sessInitTime)) {
+      return FALSE;
+    } else {
+      $now = strtotime('now');
+      $time = strtotime('+1 day', strtotime($sessInitTime));
+      return $time >= $now;
+    }
+  }
+
 }
