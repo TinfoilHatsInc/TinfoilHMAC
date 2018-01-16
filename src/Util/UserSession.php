@@ -77,7 +77,7 @@ class UserSession
    * @return bool
    */
   public static function isSessionActive() {
-    return !empty($_SESSION['hapi']['email']) || !empty($_SESSION['hapi']['password']);
+    return !empty($_SESSION['hapi']['email']) && !empty($_SESSION['hapi']['password']);
   }
 
 }
