@@ -19,15 +19,16 @@ class ClientSharedKey extends SharedKey
   private $sharedKey;
 
   /**
+   * @param $ignoreInvalidSK bool
    * @return array|string
    * @throws MissingSharedKeyException
    * @throws NoActiveSessionException
    */
-  public function getSharedKey()
+  public function getSharedKey($ignoreInvalidSK = FALSE)
   {
     if(empty($this->sharedKey)) {
       try {
-        if(!Session::getInstance()->sharedKeyIsValid()) {
+        if(!$ignoreInvalidSK && !Session::getInstance()->sharedKeyIsValid()) {
           throw new MissingConfigException('Shared key invalid.');
         }
         $this->sharedKey = ConfigReader::requireConfig('sharedKey');

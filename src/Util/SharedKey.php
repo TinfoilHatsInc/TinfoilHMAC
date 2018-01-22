@@ -10,9 +10,10 @@ abstract class SharedKey
 {
 
   /**
+   * @param $ignoreInvalidSK bool
    * @return string
    */
-  public abstract function getSharedKey();
+  public abstract function getSharedKey($ignoreInvalidSK = FALSE);
 
   public abstract function getSetKey();
 
