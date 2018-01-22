@@ -50,8 +50,13 @@ class SecureAPIRequest extends SecureIncomingElem
     } else {
       throw new InvalidSessionParamException('Invalid request.');
     }
+    if (!empty($body['key'])) {
+      $sharedKey = $body['key'];
+    } else {
+      $sharedKey = NULL;
+    }
     // Check if request is valid.
-    if (!empty($body['chubId']) && !empty($_GET['method']) && !self::validate($request)) {
+    if (!empty($body['chubId']) && !empty($_GET['method']) && !self::validate($request, $sharedKey)) {
       throw new InvalidRequestException('Invalid request.');
     } else {
       $this->httpMethod = strtolower($_SERVER['REQUEST_METHOD']);

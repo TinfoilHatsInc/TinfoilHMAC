@@ -50,14 +50,15 @@ class SecureRequest extends SecureOutgoingElem
   }
 
   /**
+   * @param $ignoreInvalidSK bool
    * @return SecureResponse
    * @throws NoActiveSessionException
    */
-  public function send()
+  public function send($ignoreInvalidSK = FALSE)
   {
     $new = FALSE;
     try {
-      $sharedKey = Session::getInstance()->getSharedKey();
+      $sharedKey = Session::getInstance()->getSharedKey($ignoreInvalidSK);
     } catch (MissingSharedKeyException $e) {
       $sharedKey = $e->getNewSharedKey();
       $new = TRUE;
