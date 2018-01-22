@@ -51,12 +51,13 @@ class Session
   }
 
   /**
+   * @param $ignoreInvalidSK bool
    * @return string
    */
-  public function getSharedKey()
+  public function getSharedKey($ignoreInvalidSK = FALSE)
   {
     if ($this->hasActiveSession()) {
-      return $this->sharedKey->getSharedKey();
+      return $this->sharedKey->getSharedKey($ignoreInvalidSK);
     } else {
       return hash('sha1', rand());
     }
